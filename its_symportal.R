@@ -320,81 +320,6 @@ its2SeqPlot
 #install.packages('svglite')
 ggsave("symportal_DIV.barplot.pdf", plot = last_plot(), width = 6, height = 3, units = c("in"), useDingbats=FALSE)
 
-
-# ##re-doing profile data with Eckert methods (produces the same graph)
-# its2Profs = read.csv("profiles_counts.csv", header = TRUE, check.names = FALSE)
-# head(its2Profs)
-# 
-# its2Profs$site = factor(its2Profs$site, levels = c("Punta Donato", "STRI Point", "Cristobal", "Bastimentos N","Bastimentos S","Cayo de Agua"))
-# levels(its2Profs$site)
-# 
-# ##normalization
-# its2ProfsTransposed = t(its2Profs[,4:length(its2Profs[1, ])])
-# its2ProfsList = DGEList(counts = its2ProfsTransposed)
-# head(its2ProfsList$samples)
-# 
-# its2ProfsNorm =  calcNormFactors(its2ProfsList, method = "TMM")
-# head(its2ProfsNorm$samples)
-# its2TMM = t(cpm(its2ProfsNorm, normalized.lib.sizes = TRUE))
-# its2ProfsNorm = cbind(its2Profs[,c(1:3)], its2TMM)
-# 
-# ##plotting
-# colOrder2 = order(colSums(its2ProfsNorm[4:length(its2ProfsNorm[1,])]), decreasing = TRUE) + 3
-# 
-# its2ProfsPerc = cbind(its2ProfsNorm[,c(1:3)],its2ProfsNorm[,c(colOrder2)])
-# its2ProfsPerc$sum = apply(its2ProfsPerc[, c(4:length(its2ProfsPerc[1,]))], 1, function(x) {
-#   sum(x, na.rm = T)
-# })
-# 
-# its2ProfsPerc = cbind(its2ProfsPerc[, c(1:3)], (its2ProfsPerc[, c(4:(ncol(its2ProfsPerc)-1))]
-#                                                 / its2ProfsPerc$sum))
-# head(its2ProfsPerc)
-# 
-# apply(its2ProfsPerc[, c(4:(ncol(its2ProfsPerc)))], 1, function(x) {
-#   sum(x, na.rm = T)
-# }) #should equal 1
-# 
-# gssProf = otuStack(its2ProfsPerc, count.columns = c(4:length(its2ProfsPerc[1, ])),
-#                    condition.columns = c(1:3))
-# 
-# gssProf<-gssProf[-grep("summ", gssProf$otu),] # remove summ rows
-# 
-# levels(gssProf$otu)
-# 
-# colorCount2 = length(c(4:length(its2ProfsPerc[1,]))) +1
-# 
-# its2ProfsPlotA = ggplot(gssProf, aes(x = sample_name, y = count, fill = factor(otu))) +
-#   geom_bar(position = "stack", stat = "identity", color = "black", size = 0.25) +
-#   ylab("Proportion") +
-#   scale_fill_manual(values = c(getPalette2(colorCount2)[2:12],
-#                                carto_pal(n = 7, "Tropic")[c(6,7)]))+
-#   labs(fill = expression(paste(italic("ITS2"), " type profile"))) +
-#   guides(fill = guide_legend(ncol = 2, reverse = FALSE)) +
-#   facet_wrap(gssProf$site, scales = "free_x",nrow = 1) +
-#   theme_bw()
-# 
-# its2ProfsPlot = its2ProfsPlotA +
-#   theme(axis.title.x = element_blank(),
-#         #axis.text.x = element_blank(),
-#         #axis.ticks.x = element_blank(),
-#         axis.title.y = element_text(color = "black", size = 12),
-#         axis.text.y = element_text(color = "black", size = 12),
-#         legend.position = "bottom",
-#         legend.title = element_text(color = "black", size = 12, hjust = 0.5, angle = 90),
-#         legend.text = element_text(color = "black", size = 10),
-#         legend.key = element_blank(),
-#         legend.key.size = unit(0.75,"line"),
-#         legend.background = element_blank(),
-#         panel.border = element_blank(),
-#         panel.background = element_rect(fill = "white"),
-#         plot.background = element_blank(),
-#         strip.text.x = element_text(size = 12),
-#         strip.text.y = element_text(size = 12),
-#         strip.background = element_rect(fill = "white", size = 0.9)
-#   )
-# quartz()
-# its2ProfsPlot
-
 #stats
 set.seed(694) #setting seed allows repetition of randomized processes
 #per site
@@ -452,17 +377,3 @@ its2PWAdonis
 #SIMPER test to see which ITS profiles contribute most difference between reef zones
 its2SimperR = simper(sqrt(its2ProfsNorm[, c(4:ncol(its2ProfsNorm))]), its2ProfsNorm$reef)
 summary(its2SimperR)
-
-#### Alpha diversity #####
-library(ggplot2)
-library(phyloseq)
-#install.packages("extrafontdb")
-library(extrafontdb)
-library(extrafont)
-library(Rmisc)
-library(cowplot)
-library(ggpubr)
-
-
-
-
