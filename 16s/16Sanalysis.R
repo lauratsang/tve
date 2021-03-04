@@ -1415,12 +1415,6 @@ plot_bar(ex1, x="reef", fill="Class")+
   theme(axis.text.x = element_text(angle=-45),legend.position="none")+
   facet_wrap(~Genus)
 
-######trying selbal
-#devtools::install_github(repo = "UVic-omics/selbal")
-library("selbal")
-
-
-
 
 
 
